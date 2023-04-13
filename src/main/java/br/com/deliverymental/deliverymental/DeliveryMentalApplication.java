@@ -1,6 +1,7 @@
 package br.com.deliverymental.deliverymental;
 
 import br.com.deliverymental.deliverymental.services.queue.EmailQueueManager;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -16,11 +17,14 @@ public class DeliveryMentalApplication {
     private static Session session;
     private static EmailQueueManager queueManager;
 
+
     public static void main(String[] args) {
+        Dotenv dotenv = Dotenv.load();
+
         session = Session.getInstance(getProperties(), new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("", "");
+                return new PasswordAuthentication(dotenv.get("EMAIL"), dotenv.get("PASSWORD"));
             }
         });
 
