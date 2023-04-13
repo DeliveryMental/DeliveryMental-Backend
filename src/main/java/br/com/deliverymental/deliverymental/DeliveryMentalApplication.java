@@ -20,7 +20,7 @@ public class DeliveryMentalApplication {
         session = Session.getInstance(getProperties(), new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("deliverymental@gmail.com", "inqbdnfltpxitech"); //TODO: ENVIAR PARA .ENV
+                return new PasswordAuthentication("", "");
             }
         });
 
