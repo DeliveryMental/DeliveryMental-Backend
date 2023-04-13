@@ -1,13 +1,15 @@
 package br.com.deliverymental.deliverymental.controllers;
 
+import br.com.deliverymental.deliverymental.DeliveryMentalApplication;
 import br.com.deliverymental.deliverymental.cryptography.SHA256;
 import br.com.deliverymental.deliverymental.models.entities.Account;
 import br.com.deliverymental.deliverymental.models.repositories.AccountRepository;
+import br.com.deliverymental.deliverymental.services.EmailType;
+import br.com.deliverymental.deliverymental.services.emails.AccountCreatedEmail;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -15,7 +17,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.sql.Date;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Optional;
 
 @RestController
@@ -67,7 +68,17 @@ public class AccountController {
                         .path("/{id}")
                         .buildAndExpand(createdAccount.getId())
                         .toUri();
+                /*
+                AccountCreatedEmail newAccount = new AccountCreatedEmail(createdAccount.getEmail(), EmailType.CreateAccount, createdAccount);
+                newAccount.makeEmail();
+                 */
+                DeliveryMentalApplication.getQueueManager().addEmailToQueue(new AccountCreatedEmail(createdAccount.getEmail(), EmailType.CreateAccount, createdAccount));
+                /*
+                List<Emails>
+                list.add()
 
+                Scheduler.consume(list) -> 1m
+                 */
                 return ResponseEntity.created(uri).build();
             }
         } else {
